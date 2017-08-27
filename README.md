@@ -24,10 +24,12 @@ export TWITTER_ACCESS_SECRET='YOUR-ACCESS-SECRET'
 To execute it, get in the main folder and run:
 
     python TwitterRanking.py
-    
-And insert the total number of tweets to analyze (the bigger this number is, the longer it will take to finish).
 
-The output will be a list with your top 20 tweets (ordered by number of favs), and some statistics.
+Then:    
+1) insert the total number of tweets to analyze (the bigger this number is, the longer it will take to finish).
+2) insert the length of the ranking to be shown.
+
+The output will be a list with your top tweets (ordered by number of favs), your most replied users and most used hashtags, and some statistics.
 
 Aknowledgements:
 I got inspired by this blog, check it out if you want to learn to do some more cool things!
