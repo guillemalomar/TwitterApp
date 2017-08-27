@@ -3,6 +3,7 @@
 import tweepy
 import os
 import sys
+from collections import defaultdict
 sys.path.append("../src/TextParser")
 sys.path.append("../src/Connection")
 from Connect import Connection
@@ -37,12 +38,15 @@ if __name__ == '__main__':
     access_token = os.environ['TWITTER_ACCESS_TOKEN']
     access_secret = os.environ['TWITTER_ACCESS_SECRET']
 
-    input_var = None
     ready = False
     while not ready:
         total_tweets_checked = raw_input("Insert total number of tweets to analyze:")
         ready = check_input(total_tweets_checked)
-    limit = 20
+
+    ready = False
+    while not ready:
+        limit = raw_input("Insert length of ranking:")
+        ready = check_input(limit)
 
     my_connection = Connection()
     my_connection.new_twitterapi_connection(consumer_key, consumer_secret, access_token, access_secret)
@@ -66,12 +70,53 @@ if __name__ == '__main__':
 
     list_of_messages = message_favs.items()
     list_of_messages.sort(key=lambda x: x[1][1], reverse=True)
+    total_replies = []
+    total_hashtags = []
     for ind, message in enumerate(list_of_messages):
-        if ind == limit:
+        if ind == int(limit):
             break
         formatting1 = int((ind + 1) < 10) + int((ind + 1) < 100)
         formatting2 = int(message[1][1] < 10) + int(message[1][1] < 100) + int(message[1][1] < 1000)
+        message_text = []
+        message_replies = []
+        message_links = []
+        message_hashtags = []
+        last_entry = ''
+        for entry in message[1][0]:
+            if 'http' in entry:
+                message_links.append(entry)
+            elif entry.startswith('@'):
+                message_replies.append(entry)
+            elif entry.startswith('#'):
+                message_hashtags.append(entry)
+            elif entry in ['.', ',', '(', ')', '?', '¿', '!', '¡', '{', '}', '[', ']'] or last_entry in ['(', '[', '¡', '¿', '{']:
+                message_text.append(message_text.pop() + entry)
+            else:
+                message_text.append(entry)
+            last_entry = entry
         print ("Message " + (' ' * int(formatting1)) + str(ind + 1) +
-              " with " + (' ' * int(formatting2)) + str(message[1][1]) + " votes, " +
+              " with " + (' ' * int(formatting2)) + str(message[1][1]) + " favs, " +
               "twitted on " + str(message[1][2]) + ": " +
-              ' '.join(message[1][0]))
+              ' '.join(message_text))
+        if len(message_replies) > 0:
+              print "Message " + (' ' * int(formatting1)) + str(ind + 1) + " replies:  ", ' '.join(message_replies)
+        if len(message_links) > 0:
+              print "Message " + (' ' * int(formatting1)) + str(ind + 1) + " links:    ", ' '.join(message_links)
+        if len(message_hashtags) > 0:
+              print "Message " + (' ' * int(formatting1)) + str(ind + 1) + " hashtags: ", ' '.join(message_hashtags)
+        total_replies.extend(message_replies)
+        total_hashtags.extend(message_hashtags)
+
+    print "Most replied users in top " + str(limit) + " tweets ----------------------------------------"
+    counts = defaultdict(int)
+    for x in total_replies:
+        counts[x] += 1
+    for entry in sorted(counts.items(), reverse=True, key=lambda tup: tup[1])[:10]:
+        print str(entry[1]) + " replies," + str(entry[0])
+
+    print "Most used hashtags in top " + str(limit) + " tweets ----------------------------------------"
+    counts = defaultdict(int)
+    for x in total_hashtags:
+        counts[x] += 1
+    for entry in sorted(counts.items(), reverse=True, key=lambda tup: tup[1])[:10]:
+        print str(entry[1]) + " times used," + str(entry[0])
