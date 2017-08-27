@@ -114,12 +114,12 @@ if __name__ == '__main__':
     counts = defaultdict(int)
     for x in total_replies:
         counts[x] += 1
-    for entry in sorted(counts.items(), reverse=True, key=lambda tup: tup[1])[:10]:
+    for entry in sorted(counts.items(), reverse=True, key=lambda tup: tup[1])[:int(limit)]:
         print str(entry[1]) + " replies," + str(entry[0])
 
     print "Most used hashtags in last " + str(total_tweets_checked) + " tweets ----------------------------------------"
     counts = defaultdict(int)
     for x in total_hashtags:
         counts[x] += 1
-    for entry in sorted(counts.items(), reverse=True, key=lambda tup: tup[1])[:10]:
+    for entry in sorted(counts.items(), reverse=True, key=lambda tup: tup[1])[:int(limit)]:
         print str(entry[1]) + " times used," + str(entry[0])
