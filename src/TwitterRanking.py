@@ -6,8 +6,8 @@ import sys
 from collections import defaultdict
 sys.path.append("../src/TextParser")
 sys.path.append("../src/Connection")
-from Connect import Connection
-from TextParser import preprocess
+from Connection.Connect import Connection
+from TextParser.TextParser import preprocess
 
 
 # Method to check if the user wants to finish the application
