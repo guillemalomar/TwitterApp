@@ -54,11 +54,18 @@ if __name__ == '__main__':
     messages_liked = 0
     message_favs = {}
     total_favs = 0
+    total_replies = []
+    total_hashtags = []
     for status in tweepy.Cursor(my_connection.api.user_timeline).items(int(total_tweets_checked)):
         if status.favorite_count > 0:
             message_favs[status.id] = preprocess(status.text), status.favorite_count, str(status.created_at)
             messages_liked += 1
             total_favs += status.favorite_count
+        for entry in preprocess(status.text):
+            if entry.startswith('@'):
+                total_replies.append(entry)
+            elif entry.startswith('#'):
+                total_hashtags.append(entry)
 
     print ("% Tweets with at least one favourite in the last " +
           str(total_tweets_checked) + " tweets: " +
@@ -70,8 +77,6 @@ if __name__ == '__main__':
 
     list_of_messages = message_favs.items()
     list_of_messages.sort(key=lambda x: x[1][1], reverse=True)
-    total_replies = []
-    total_hashtags = []
     for ind, message in enumerate(list_of_messages):
         if ind == int(limit):
             break
@@ -104,17 +109,15 @@ if __name__ == '__main__':
               print "Message " + (' ' * int(formatting1)) + str(ind + 1) + " links:    ", ' '.join(message_links)
         if len(message_hashtags) > 0:
               print "Message " + (' ' * int(formatting1)) + str(ind + 1) + " hashtags: ", ' '.join(message_hashtags)
-        total_replies.extend(message_replies)
-        total_hashtags.extend(message_hashtags)
 
-    print "Most replied users in top " + str(limit) + " tweets ----------------------------------------"
+    print "Most replied users in last " + str(total_tweets_checked) + " tweets ----------------------------------------"
     counts = defaultdict(int)
     for x in total_replies:
         counts[x] += 1
     for entry in sorted(counts.items(), reverse=True, key=lambda tup: tup[1])[:10]:
         print str(entry[1]) + " replies," + str(entry[0])
 
-    print "Most used hashtags in top " + str(limit) + " tweets ----------------------------------------"
+    print "Most used hashtags in last " + str(total_tweets_checked) + " tweets ----------------------------------------"
     counts = defaultdict(int)
     for x in total_hashtags:
         counts[x] += 1
