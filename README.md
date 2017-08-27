@@ -30,7 +30,7 @@ Then:
 1) insert the total number of tweets to analyze (the bigger this number is, the longer it will take to finish).
 2) insert the length of the ranking to be shown.
 
-The output will be a list with your top tweets (ordered by number of favs), your most replied users and most used hashtags, and some statistics.
+The output will be a list with your top tweets (ordered by number of favs), your most replied users, your most used hashtags, and some statistics.
 
 ## Example output
 This is the output of my account, analyzing the last 200 messages and obtaining the top 5 tweets, users replied and hashtags.
