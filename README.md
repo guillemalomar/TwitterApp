@@ -9,7 +9,7 @@
 This is an app to check which have been your most successful tweets.
 
 Requirements:
-- Python +2.7
+- Python +2.7 (can be downloaded from here: https://www.python.org/downloads/release/python-2713/)
 - You will need an official account at Twitter (in fact, you should already have one, as without it this app will be quite useless)
 - And an official twitter api account. This is really easy to do, just go to https://apps.twitter.com/ being logged in, and ask to 'Create a New App'.
 - Now, from your terminal, you will have to set some environment variables with your official app keys:
